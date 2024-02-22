@@ -59,7 +59,7 @@ int main(void)
 {
     // Initialization
     //---------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "raylib game template");
+    InitWindow(screenWidth, screenHeight, "topdown character controller");
 
     InitAudioDevice();      // Initialize audio device
 
@@ -85,6 +85,7 @@ int main(void)
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         UpdateDrawFrame();
+        DrawFPS(10, 10);
     }
 #endif
 
