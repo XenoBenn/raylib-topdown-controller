@@ -24,7 +24,10 @@
 **********************************************************************************************/
 
 #include "../../raylib-master/src/raylib.h"
+#include "../../raylib-master/src/raymath.h"
 #include "screens.h"
+
+#include <stdio.h>
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
@@ -36,12 +39,15 @@ static int finishScreen = 0;
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
 
+Model model;
+
 // Gameplay Screen Initialization logic
 void InitGameplayScreen(void)
 {
     // TODO: Initialize GAMEPLAY screen variables here!
     framesCounter = 0;
     finishScreen = 0;
+    model = LoadModel("resources/models/obj/armor.obj");
 }
 
 // Gameplay Screen Update logic
@@ -56,7 +62,7 @@ void UpdateGameplayScreen(void)
     }
 }
 
-    Vector3 capsulPosition = { 0.0f, 0.0f, 0.0f };
+    Vector3 modelStartPos = { 0.0f, 0.0f, 0.0f };
 
     // Define the camera to look into our 3d world
     Camera3D camera = {
@@ -75,36 +81,35 @@ void DrawGameplayScreen(void)
     // TODO: Draw GAMEPLAY screen here!
 
     BeginMode3D(camera);
-        DrawCapsule(capsulPosition, (Vector3){0.0f, 2.0f, 0.0f }, 2.0f, 8, 4, RED);
-        DrawCapsuleWires(capsulPosition, (Vector3){0.0f, 2.0f, 0.0f }, 2.0f, 6, 4, MAROON);
-
+        DrawModel(model, modelStartPos, 1.0f, WHITE);
         DrawGrid(10, 1.0f);
     EndMode3D();
 
-    camera.target = capsulPosition;
+    camera.target = modelStartPos;
 
     if (IsKeyDown(KEY_W)) {
-        capsulPosition.z -= 0.1f;
+        modelStartPos.z -= 0.1f;
 }
     if (IsKeyDown(KEY_S)) {
-        capsulPosition.z += 0.1f;
+        modelStartPos.z += 0.1f;
 }
     if (IsKeyDown(KEY_A)) {
-        capsulPosition.x -= 0.1f;
+        modelStartPos.x -= 0.1f;
 }
     if (IsKeyDown(KEY_D)) {
-        capsulPosition.x += 0.1f;
+        modelStartPos.x += 0.1f;
 }
     UpdateCamera(&camera, CAMERA_THIRD_PERSON );
     Vector3 cameraOffset = { 0.0f, 10.0f, 10.0f };
-    camera.position.x = capsulPosition.x + cameraOffset.x;
-    camera.position.z = capsulPosition.z + cameraOffset.z;
+    camera.position.x = modelStartPos.x + cameraOffset.x;
+    camera.position.z = modelStartPos.z + cameraOffset.z;
 }
 
 // Gameplay Screen Unload logic
 void UnloadGameplayScreen(void)
 {
     // TODO: Unload GAMEPLAY screen variables here!
+    UnloadModel(model);
 }
 
 // Gameplay Screen should finish?
