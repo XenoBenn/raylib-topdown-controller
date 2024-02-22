@@ -67,10 +67,10 @@ void UpdateGameplayScreen(void)
     // Define the camera to look into our 3d world
     Camera3D camera = {
 
-    .position = (Vector3){ 0.0f, 10.0f, 10.0f },  // Camera position
+    .position = (Vector3){ 0.0f, 15.0f, 3.0f },  // Camera position
     .target = (Vector3){0.0f, 0.0f, 0.0f },       // Camera looking at point
     .up = (Vector3){ 0.0f, 1.0f, 0.0f },          // Camera up vector (rotation towards target)
-    .fovy = 45.0f,                                // Camera field-of-view Y
+    .fovy = 55.0f,                                // Camera field-of-view Y
     .projection = CAMERA_PERSPECTIVE              // Camera mode type
 };
 
@@ -82,7 +82,7 @@ void DrawGameplayScreen(void)
 
     BeginMode3D(camera);
         DrawModel(model, modelStartPos, 1.0f, WHITE);
-        DrawGrid(10, 1.0f);
+        DrawGrid(100, 1.0f);
     EndMode3D();
 
     camera.target = modelStartPos;
@@ -99,8 +99,8 @@ void DrawGameplayScreen(void)
     if (IsKeyDown(KEY_D)) {
         modelStartPos.x += 0.1f;
 }
-    UpdateCamera(&camera, CAMERA_THIRD_PERSON );
-    Vector3 cameraOffset = { 0.0f, 10.0f, 10.0f };
+    // UpdateCamera(&camera, CAMERA_CUSTOM);
+    Vector3 cameraOffset = { 0.0f, 15.0f, 3.0f };
     camera.position.x = modelStartPos.x + cameraOffset.x;
     camera.position.z = modelStartPos.z + cameraOffset.z;
 }
