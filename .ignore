@@ -1,0 +1,11 @@
+*.exe
+*.md
+*.lua
+*.bat
+premake5
+*.osx
+LICENSE
+*.ogg
+*.wav
+*.png
+/extras/

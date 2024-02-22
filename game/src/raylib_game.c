@@ -12,7 +12,7 @@
 *
 ********************************************************************************************/
 
-#include "raylib.h"
+#include "../../raylib-master/src/raylib.h"
 #include "screens.h"    // NOTE: Declares global (extern) variables and screens functions
 
 #if defined(PLATFORM_WEB)

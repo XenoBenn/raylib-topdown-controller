@@ -23,7 +23,7 @@
 *
 **********************************************************************************************/
 
-#include "raylib.h"
+#include "../../raylib-master/src/raylib.h"
 #include "screens.h"
 
 //----------------------------------------------------------------------------------
@@ -56,17 +56,47 @@ void UpdateGameplayScreen(void)
         PlaySound(fxCoin);
     }
 }
+    Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
+
+    // Define the camera to look into our 3d world
+    Camera3D camera = {
+
+    .position = (Vector3){ 0.0f, 10.0f, 10.0f },  // Camera position
+    .target = (Vector3){0.0f, 0.0f, 0.0f },      // Camera looking at point
+    .up = (Vector3){ 0.0f, 1.0f, 0.0f },          // Camera up vector (rotation towards target)
+    .fovy = 45.0f,                                // Camera field-of-view Y
+    .projection = CAMERA_PERSPECTIVE              // Camera mode type
+};
+
 
 // Gameplay Screen Draw logic
 void DrawGameplayScreen(void)
 {
     // TODO: Draw GAMEPLAY screen here!
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), PURPLE);
-    Vector2 pos = { 20, 10 };
-    DrawTextEx(font, "GAMEPLAY SCREEN", pos, font.baseSize*3.0f, 4, MAROON);
-    DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
-}
 
+        Vector3 cameraOffset = { 0.0f, 10.0f, 10.0f };
+        camera.position.x = cubePosition.x + cameraOffset.x;
+        camera.position.z = cubePosition.z + cameraOffset.z;
+
+    if (IsKeyDown(KEY_W)) {
+        cubePosition.z -= 1.0f;
+}
+    if (IsKeyDown(KEY_S)) {
+        cubePosition.z += 1.0f;
+}
+    if (IsKeyDown(KEY_A)) {
+        cubePosition.x -= 1.0f;
+}
+    if (IsKeyDown(KEY_D)) {
+        cubePosition.x += 1.0f;
+}
+    BeginMode3D(camera);
+        DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
+        DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
+
+        DrawGrid(10, 1.0f);
+    EndMode3D();
+}
 // Gameplay Screen Unload logic
 void UnloadGameplayScreen(void)
 {
