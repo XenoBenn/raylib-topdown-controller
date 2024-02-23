@@ -117,8 +117,8 @@ void DrawTitleScreen(void)
     // DrawTextEx(font, "TITLE SCREEN", pos, font.baseSize*3.0f, 4, DARKGREEN);
     // DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
     ClearBackground(BLACK);
-    DrawText("CLICK TO START", btnBounds.x, btnBounds.y, 12, RAYWHITE);
     DrawTextureRec(button, sourceRec, (Vector2){ btnBounds.x, btnBounds.y }, WHITE); // Draw button frame
+    DrawText("START", btnBounds.x + 90.0f, btnBounds.y + 12.0f, 28, RAYWHITE);
 }
 
 // Title Screen Unload logic
