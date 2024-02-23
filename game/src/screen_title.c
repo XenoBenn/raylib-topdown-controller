@@ -83,19 +83,20 @@ void UpdateTitleScreen(void)
     if (CheckCollisionPointRec(mousePoint, btnBounds)){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             btnState = 1;
-            PlaySound(fxButtonDown);
+            PlaySound(fxButtonUp);
         } else {
             btnState = 0;
+            PlaySound(fxButtonDown);
         }
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             btnAction = true;
+            PlaySound(fxButtonUp);
         }
     } else {
         btnState = 0;
     }
 
-    if (btnAction == true) {
-        PlaySound(fxButtonUp);
+    if (btnAction) {
     }
     sourceRec.y = btnState * frameHeight;
 
