@@ -23,12 +23,14 @@
 *
 **********************************************************************************************/
 
-#include "raylib.h"
+#include "../../raylib-master/src/raylib.h"
 #include "screens.h"
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
+Sound sound;
+
 static int framesCounter = 0;
 static int finishScreen = 0;
 
@@ -67,6 +69,10 @@ void InitLogoScreen(void)
 
     state = 0;
     alpha = 1.0f;
+
+    sound = LoadSound("resources/ambient2.ogg");
+    SetSoundVolume(sound, 1.0f);
+    PlaySound(sound);
 }
 
 // Logo Screen Update logic
@@ -164,6 +170,9 @@ void DrawLogoScreen(void)
 void UnloadLogoScreen(void)
 {
     // Unload LOGO screen variables here!
+    UnloadSound(sound);
+
+    CloseAudioDevice();     // Close audio context
 }
 
 // Logo Screen should finish?
