@@ -82,11 +82,12 @@ void UpdateTitleScreen(void)
 
     if (CheckCollisionPointRec(mousePoint, btnBounds)){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                PlaySound(fxButtonDown);
+            }
             btnState = 1;
-            PlaySound(fxButtonUp);
         } else {
             btnState = 0;
-            PlaySound(fxButtonDown);
         }
         if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             btnAction = true;
@@ -101,7 +102,7 @@ void UpdateTitleScreen(void)
     sourceRec.y = btnState * frameHeight;
 
     // Press enter or tap to change to GAMEPLAY screen
-    if (IsKeyPressed(KEY_ENTER) || btnAction == true)
+    if (IsKeyPressed(KEY_ENTER)/* || btnAction == true*/)
     {
         //finishScreen = 1;   // OPTIONS
         finishScreen = 2;   // GAMEPLAY
