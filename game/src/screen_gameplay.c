@@ -86,6 +86,10 @@ void DrawGameplayScreen(void)
     EndMode3D();
 
     camera.target = modelStartPos;
+    // UpdateCamera(&camera, CAMERA_CUSTOM);
+    Vector3 cameraOffset = { 0.0f, 15.0f, 3.0f };
+    camera.position.x = modelStartPos.x + cameraOffset.x;
+    camera.position.z = modelStartPos.z + cameraOffset.z;
 
     if (IsKeyDown(KEY_W)) {
         modelStartPos.z -= 0.1f;
@@ -99,10 +103,6 @@ void DrawGameplayScreen(void)
     if (IsKeyDown(KEY_D)) {
         modelStartPos.x += 0.1f;
 }
-    // UpdateCamera(&camera, CAMERA_CUSTOM);
-    Vector3 cameraOffset = { 0.0f, 15.0f, 3.0f };
-    camera.position.x = modelStartPos.x + cameraOffset.x;
-    camera.position.z = modelStartPos.z + cameraOffset.z;
 }
 
 // Gameplay Screen Unload logic
