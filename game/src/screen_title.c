@@ -46,6 +46,7 @@ Sound fxButtonDown;
 Sound fxButtonUp;
 Rectangle sourceRec;
 Rectangle btnBounds;
+Rectangle btnTextBounds;
 //----------------------------------------------------------------------------------
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -63,18 +64,12 @@ void InitTitleScreen(void)
 
     fxButtonDown = LoadSound("resources/sounds/btnDown.ogg");
     fxButtonUp = LoadSound("resources/sounds/btnUp.ogg");
-    button = LoadTexture("resources/images/ui/button_small.png");
+    button = LoadTexture("resources/images/ui/button_smaller.png");
 
     // Define frame rectangle for drawing
     frameHeight = (float)button.height/NUM_FRAMES;
     sourceRec = (Rectangle){0, 0, (float)button.width, frameHeight};
-    btnBounds = (Rectangle){ screenWidth/2.0f - button.width/2.0f, screenHeight/2.0f - button.height/NUM_FRAMES/2.0f, (float)button.width, frameHeight };
-    // btnBounds = (Rectangle){
-    //     screenWidth / 2.0f - button.width / 2.0f, 
-    //     screenHeight / 2.0f - button.height * 2.0f / NUM_FRAMES, 
-    //     (float) button.width, 
-    //     frameHeight 
-    // };
+    btnBounds = (Rectangle){ screenWidth/2.0f - button.width/2.0f, screenHeight/2.0f - button.height/NUM_FRAMES/2.0f, (float)button.width - 180, frameHeight };
 }
 
 // Title Screen Update logic
@@ -120,7 +115,8 @@ void DrawTitleScreen(void)
     // Vector2 pos = { 20, 10 };
     // DrawTextEx(font, "TITLE SCREEN", pos, font.baseSize*3.0f, 4, DARKGREEN);
     // DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
+    DrawText("CLICK TO START", btnBounds.x, btnBounds.y, 12, RAYWHITE);
     DrawTextureRec(button, sourceRec, (Vector2){ btnBounds.x, btnBounds.y }, WHITE); // Draw button frame
 }
 
