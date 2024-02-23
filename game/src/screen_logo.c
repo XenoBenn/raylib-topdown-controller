@@ -78,6 +78,10 @@ void InitLogoScreen(void)
 // Logo Screen Update logic
 void UpdateLogoScreen(void)
 {
+    if (IsKeyDown(KEY_SPACE))
+    {
+        finishScreen = 1; // Don't wait for the logo to finish jump to next screen
+    }
     if (state == 0)                 // State 0: Top-left square corner blink logic
     {
         framesCounter++;
