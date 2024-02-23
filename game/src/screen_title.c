@@ -23,15 +23,29 @@
 *
 **********************************************************************************************/
 
-#include "raylib.h"
+#include "../../raylib-master/src/raylib.h"
 #include "screens.h"
 
+#define NUM_FRAMES 2
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
 static int framesCounter = 0;
 static int finishScreen = 0;
 
+float frameHeight;
+
+Texture2D button;
+
+Vector2 mousePoint = {0.0f, 0.0f};
+
+int btnState = 0;                                                 // Button state: 0 normal, 1 pushed
+bool btnAction = false;                                           // Button action should be activated
+
+Sound fxButtonDown;
+Sound fxButtonUp;
+Rectangle sourceRec;
+Rectangle btnBounds;
 //----------------------------------------------------------------------------------
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -42,6 +56,25 @@ void InitTitleScreen(void)
     // TODO: Initialize TITLE screen variables here!
     framesCounter = 0;
     finishScreen = 0;
+
+    float screenWidth = GetScreenWidth();
+    float screenHeight = GetScreenHeight();
+    InitAudioDevice();
+
+    fxButtonDown = LoadSound("resources/sounds/btnDown.ogg");
+    fxButtonUp = LoadSound("resources/sounds/btnUp.ogg");
+    button = LoadTexture("resources/images/ui/button_small.png");
+
+    // Define frame rectangle for drawing
+    frameHeight = (float)button.height/NUM_FRAMES;
+    sourceRec = (Rectangle){0, 0, (float)button.width, frameHeight};
+    btnBounds = (Rectangle){ screenWidth/2.0f - button.width/2.0f, screenHeight/2.0f - button.height/NUM_FRAMES/2.0f, (float)button.width, frameHeight };
+    // btnBounds = (Rectangle){
+    //     screenWidth / 2.0f - button.width / 2.0f, 
+    //     screenHeight / 2.0f - button.height * 2.0f / NUM_FRAMES, 
+    //     (float) button.width, 
+    //     frameHeight 
+    // };
 }
 
 // Title Screen Update logic
@@ -49,12 +82,33 @@ void UpdateTitleScreen(void)
 {
     // TODO: Update TITLE screen variables here!
 
+    mousePoint = GetMousePosition();
+    btnAction = false;
+
+    if (CheckCollisionPointRec(mousePoint, btnBounds)){
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            btnState = 1;
+            PlaySound(fxButtonDown);
+        } else {
+            btnState = 0;
+        }
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            btnAction = true;
+        }
+    } else {
+        btnState = 0;
+    }
+
+    if (btnAction == true) {
+        PlaySound(fxButtonUp);
+    }
+    sourceRec.y = btnState * frameHeight;
+
     // Press enter or tap to change to GAMEPLAY screen
-    if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
+    if (IsKeyPressed(KEY_ENTER) || btnAction == true)
     {
         //finishScreen = 1;   // OPTIONS
         finishScreen = 2;   // GAMEPLAY
-        PlaySound(fxCoin);
     }
 }
 
@@ -62,16 +116,21 @@ void UpdateTitleScreen(void)
 void DrawTitleScreen(void)
 {
     // TODO: Draw TITLE screen here!
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
-    Vector2 pos = { 20, 10 };
-    DrawTextEx(font, "TITLE SCREEN", pos, font.baseSize*3.0f, 4, DARKGREEN);
-    DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
+    // DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
+    // Vector2 pos = { 20, 10 };
+    // DrawTextEx(font, "TITLE SCREEN", pos, font.baseSize*3.0f, 4, DARKGREEN);
+    // DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
+    ClearBackground(RAYWHITE);
+    DrawTextureRec(button, sourceRec, (Vector2){ btnBounds.x, btnBounds.y }, WHITE); // Draw button frame
 }
 
 // Title Screen Unload logic
 void UnloadTitleScreen(void)
 {
     // TODO: Unload TITLE screen variables here!
+    UnloadTexture(button);
+    UnloadSound(fxButtonDown);
+    UnloadSound(fxButtonUp);
 }
 
 // Title Screen should finish?
