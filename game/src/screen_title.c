@@ -25,28 +25,29 @@
 
 #include "../../raylib-master/src/raylib.h"
 #include "screens.h"
+#include <stdbool.h>
 
-#define NUM_FRAMES 2
+#define RAYGUI_IMPLEMENTATION
+#include "../../raylib-master/src/raygui.h"
+
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
 static int framesCounter = 0;
 static int finishScreen = 0;
 
-float frameHeight;
-
-Texture2D button;
 
 Vector2 mousePoint = {0.0f, 0.0f};
 
-int btnState = 0;                                                 // Button state: 0 normal, 1 pushed
-bool btnAction = false;                                           // Button action should be activated
+bool btnStartAction = false;                                           // Button action should be activated
 
 Sound fxButtonDown;
 Sound fxButtonUp;
-Rectangle sourceRec;
-Rectangle btnBounds;
-Rectangle btnTextBounds;
+
+bool buttonStartPressed;
+bool buttonExitPressed;
+bool buttonOptionsPressed;
+bool btnOptionsAction; 
 //----------------------------------------------------------------------------------
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -64,12 +65,11 @@ void InitTitleScreen(void)
 
     fxButtonDown = LoadSound("resources/sounds/btnDown.ogg");
     fxButtonUp = LoadSound("resources/sounds/btnUp.ogg");
-    button = LoadTexture("resources/images/ui/button_smaller.png");
 
-    // Define frame rectangle for drawing
-    frameHeight = (float)button.height/NUM_FRAMES;
-    sourceRec = (Rectangle){0, 0, (float)button.width, frameHeight};
-    btnBounds = (Rectangle){ screenWidth/2.0f - button.width/2.0f, screenHeight/2.0f - button.height/NUM_FRAMES/2.0f, (float)button.width - 180, frameHeight };
+    buttonStartPressed = false;
+    buttonStartPressed = false;
+    buttonOptionsPressed = false;
+    btnOptionsAction = false;
 }
 
 // Title Screen Update logic
@@ -78,8 +78,24 @@ void UpdateTitleScreen(void)
     // TODO: Update TITLE screen variables here!
 
     mousePoint = GetMousePosition();
-    btnAction = false;
+    btnStartAction = false;
 
+    if (buttonStartPressed) {
+        PlaySound(fxButtonDown);
+        btnStartAction = true;
+    }
+
+    if (buttonOptionsPressed) {
+        PlaySound(fxButtonDown);
+        btnOptionsAction = true;
+    }
+
+    if (buttonExitPressed) {
+        PlaySound(fxButtonDown);
+        CloseWindow();
+    }
+
+/* Old code with the image/rectangle collision recognition. Want to keep it here in case I will need it later
     if (CheckCollisionPointRec(mousePoint, btnBounds)){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -99,13 +115,16 @@ void UpdateTitleScreen(void)
 
     if (btnAction) {
     }
-    sourceRec.y = btnState * frameHeight;
+*/
 
     // Press enter or tap to change to GAMEPLAY screen
-    if (IsKeyPressed(KEY_ENTER)/* || btnAction == true*/)
+    if (btnStartAction == true)
     {
         //finishScreen = 1;   // OPTIONS
         finishScreen = 2;   // GAMEPLAY
+    }
+    if (btnOptionsAction == true) {
+        finishScreen = 1;   // OPTIONS
     }
 }
 
@@ -113,20 +132,17 @@ void UpdateTitleScreen(void)
 void DrawTitleScreen(void)
 {
     // TODO: Draw TITLE screen here!
-    // DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
-    // Vector2 pos = { 20, 10 };
-    // DrawTextEx(font, "TITLE SCREEN", pos, font.baseSize*3.0f, 4, DARKGREEN);
-    // DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
     ClearBackground(BLACK);
-    DrawTextureRec(button, sourceRec, (Vector2){ btnBounds.x, btnBounds.y }, WHITE); // Draw button frame
-    DrawText("START", btnBounds.x + 90.0f, btnBounds.y + 12.0f, 28, RAYWHITE);       // This is absolutely not good and needs refactoring!
+
+    buttonStartPressed = GuiButton((Rectangle){ 96, 96, 120, 24 }, "START");
+    buttonOptionsPressed = GuiButton((Rectangle){ 96, 126, 120, 24 }, "OPTIONS");
+    buttonExitPressed = GuiButton((Rectangle){ 96, 156, 120, 24 }, "EXIT");
 }
 
 // Title Screen Unload logic
 void UnloadTitleScreen(void)
 {
     // TODO: Unload TITLE screen variables here!
-    UnloadTexture(button);
     UnloadSound(fxButtonDown);
     UnloadSound(fxButtonUp);
 }
