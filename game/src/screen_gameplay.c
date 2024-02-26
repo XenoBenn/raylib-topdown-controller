@@ -28,7 +28,6 @@
 #include "screens.h"
 
 #include "../../raylib-master/src/raygui.h"
-#include <stdio.h>
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
@@ -47,6 +46,9 @@ Camera3D camera = {
     .projection = CAMERA_PERSPECTIVE              // Camera mode type
 };
 
+float cameraYPosition;
+float const MAX_CAMERA_Y_POS = 35.0f;
+float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
 bool windowInventoryActive;
 bool windowInventroyToggle;
@@ -80,6 +82,11 @@ void UpdateGameplayScreen(void)
 
     if (IsKeyPressed(KEY_E)){
         windowInventoryActive = !windowInventoryActive;
+    }
+
+    cameraYPosition = GetMouseWheelMove();
+    if (camera.position.y > 15.0f && camera.position.y < 35.0f){
+        camera.position.y -= cameraYPosition * 1.5f;
     }
 }
 
