@@ -98,19 +98,26 @@ void DrawGameplayScreen(void)
 
     // Normalize the movement vector
     Vector2 movement = { 0.0f, 0.0f };
+    float rotate = 0.0f;
 
     if (IsKeyDown(KEY_W)) {
         movement.y -= 1.0f;
+        rotate -= 180.0f;
     }
     if (IsKeyDown(KEY_S)) {
         movement.y += 1.0f;
+        rotate+= 0.0f;
     }
     if (IsKeyDown(KEY_A)) {
         movement.x -= 1.0f;
+        rotate -= 90.0f;
     }
     if (IsKeyDown(KEY_D)) {
         movement.x += 1.0f;
+        rotate += 90.0f;
     }
+
+    model.transform = MatrixRotateY(DEG2RAD * rotate);
 
     movement = Vector2Normalize(movement);
 
