@@ -92,7 +92,7 @@ void UpdateTitleScreen(void)
 
     if (buttonExitPressed) {
         PlaySound(fxButtonDown);
-        CloseWindow();
+        // CloseWindow();
     }
 
 /* Old code with the image/rectangle collision recognition. Want to keep it here in case I will need it later
