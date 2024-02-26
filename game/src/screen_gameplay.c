@@ -27,6 +27,7 @@
 #include "../../raylib-master/src/raymath.h"
 #include "screens.h"
 
+#include "../../raylib-master/src/raygui.h"
 #include <stdio.h>
 
 //----------------------------------------------------------------------------------
@@ -34,33 +35,6 @@
 //----------------------------------------------------------------------------------
 static int framesCounter = 0;
 static int finishScreen = 0;
-
-//----------------------------------------------------------------------------------
-// Gameplay Screen Functions Definition
-//----------------------------------------------------------------------------------
-
-Model model;
-
-// Gameplay Screen Initialization logic
-void InitGameplayScreen(void)
-{
-    // TODO: Initialize GAMEPLAY screen variables here!
-    framesCounter = 0;
-    finishScreen = 0;
-    model = LoadModel("resources/models/obj/armor.obj");
-}
-
-// Gameplay Screen Update logic
-void UpdateGameplayScreen(void)
-{
-    // TODO: Update GAMEPLAY screen variables here!
-
-    // Press enter or tap to change to ENDING screen
-    if (IsKeyPressed(KEY_ENTER))
-    {
-        finishScreen = 1;
-    }
-}
 
     Vector3 modelStartPos = { 0.0f, 0.0f, 0.0f };
 
@@ -74,6 +48,41 @@ void UpdateGameplayScreen(void)
     .projection = CAMERA_PERSPECTIVE              // Camera mode type
 };
 
+Model model;
+bool windowInventoryActive;
+bool windowInventroyToggle;
+
+//----------------------------------------------------------------------------------
+// Gameplay Screen Functions Definition
+//----------------------------------------------------------------------------------
+
+
+// Gameplay Screen Initialization logic
+void InitGameplayScreen(void)
+{
+    // TODO: Initialize GAMEPLAY screen variables here!
+    framesCounter = 0;
+    finishScreen = 0;
+    model = LoadModel("resources/models/obj/armor.obj");
+    windowInventoryActive = false;
+    windowInventroyToggle = false;
+}
+
+// Gameplay Screen Update logic
+void UpdateGameplayScreen(void)
+{
+    // TODO: Update GAMEPLAY screen variables here!
+
+    // Press enter or tap to change to ENDING screen
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        finishScreen = 1;
+    }
+
+    if (IsKeyPressed(KEY_E)){
+        windowInventoryActive = !windowInventoryActive;
+    }
+}
 
 // Gameplay Screen Draw logic
 void DrawGameplayScreen(void)
@@ -93,16 +102,20 @@ void DrawGameplayScreen(void)
 
     if (IsKeyDown(KEY_W)) {
         modelStartPos.z -= 0.1f;
-}
+    }
     if (IsKeyDown(KEY_S)) {
         modelStartPos.z += 0.1f;
-}
+    }
     if (IsKeyDown(KEY_A)) {
         modelStartPos.x -= 0.1f;
-}
+    }
     if (IsKeyDown(KEY_D)) {
         modelStartPos.x += 0.1f;
-}
+    }
+    // Raygui controls drawing
+    if (windowInventoryActive) {
+        windowInventoryActive = !GuiWindowBox((Rectangle) { 328, 152, 608, 424 }, "Inventory" );
+    }
 }
 
 // Gameplay Screen Unload logic
