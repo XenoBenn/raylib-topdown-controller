@@ -36,12 +36,11 @@
 static int framesCounter = 0;
 static int finishScreen = 0;
 
-    Vector3 modelStartPos = { 0.0f, 0.0f, 0.0f };
+Vector3 modelStartPos = { 0.0f, 0.0f, 0.0f };
 
-    // Define the camera to look into our 3d world
-    Camera3D camera = {
-
-    .position = (Vector3){ 0.0f, 15.0f, 3.0f },  // Camera position
+// Define the camera to look into our 3d world
+Camera3D camera = {
+    .position = (Vector3){ 0.0f, 25.0f, 3.0f },  // Camera position
     .target = (Vector3){0.0f, 0.0f, 0.0f },       // Camera looking at point
     .up = (Vector3){ 0.0f, 1.0f, 0.0f },          // Camera up vector (rotation towards target)
     .fovy = 55.0f,                                // Camera field-of-view Y
@@ -94,24 +93,36 @@ void DrawGameplayScreen(void)
         DrawGrid(100, 1.0f);
     EndMode3D();
 
+
+    Vector3 cameraOffset = { 0.0f, 25.0f, 3.0f };
+
+    // Normalize the movement vector
+    Vector2 movement = { 0.0f, 0.0f };
+
+    if (IsKeyDown(KEY_W)) {
+        movement.y -= 1.0f;
+    }
+    if (IsKeyDown(KEY_S)) {
+        movement.y += 1.0f;
+    }
+    if (IsKeyDown(KEY_A)) {
+        movement.x -= 1.0f;
+    }
+    if (IsKeyDown(KEY_D)) {
+        movement.x += 1.0f;
+    }
+
+    movement = Vector2Normalize(movement);
+
+    // Update model movement based on input
+    modelStartPos.x += movement.x * 0.1f;
+    modelStartPos.z += movement.y * 0.1f;
+
+    // Update the camera to the model
     camera.target = modelStartPos;
-    // UpdateCamera(&camera, CAMERA_CUSTOM);
-    Vector3 cameraOffset = { 0.0f, 15.0f, 3.0f };
     camera.position.x = modelStartPos.x + cameraOffset.x;
     camera.position.z = modelStartPos.z + cameraOffset.z;
 
-    if (IsKeyDown(KEY_W)) {
-        modelStartPos.z -= 0.1f;
-    }
-    if (IsKeyDown(KEY_S)) {
-        modelStartPos.z += 0.1f;
-    }
-    if (IsKeyDown(KEY_A)) {
-        modelStartPos.x -= 0.1f;
-    }
-    if (IsKeyDown(KEY_D)) {
-        modelStartPos.x += 0.1f;
-    }
     // Raygui controls drawing
     if (windowInventoryActive) {
         windowInventoryActive = !GuiWindowBox((Rectangle) { 328, 152, 608, 424 }, "Inventory" );
