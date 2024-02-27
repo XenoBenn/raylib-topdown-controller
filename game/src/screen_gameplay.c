@@ -92,9 +92,17 @@ void UpdateGameplayScreen(void)
     }
 
     cameraYPosition = GetMouseWheelMove();
-    if (camera.position.y > 15.0f && camera.position.y < 35.0f){
-        camera.position.y -= cameraYPosition * 1.5f;
-    }
+    // Move the camera Y position
+    camera.position.y -= cameraYPosition * 2.0f;
+
+    // Check if the camera position exceeds the limits and adjust if neccessary
+    if (camera.position.y <= MIN_CAMERA_Y_POS) {
+        camera.position.y = MIN_CAMERA_Y_POS;
+    } else if (camera.position.y >= MAX_CAMERA_Y_POS) {
+        camera.position.y = MAX_CAMERA_Y_POS;
+    } 
+
+
     mousePos = GetMousePosition();
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         if (CheckCollisionPointRec(mousePos, windowInventoryPos)) {
