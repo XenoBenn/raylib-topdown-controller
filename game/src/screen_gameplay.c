@@ -29,6 +29,7 @@
 
 #include "../../raylib-master/src/raygui.h"
 
+#include <math.h>
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -109,19 +110,19 @@ void DrawGameplayScreen(void)
 
     if (IsKeyDown(KEY_W)) {
         movement.y -= 1.0f;
-        rotate -= 180.0f;
     }
     if (IsKeyDown(KEY_S)) {
         movement.y += 1.0f;
-        rotate+= 0.0f;
     }
     if (IsKeyDown(KEY_A)) {
         movement.x -= 1.0f;
-        rotate -= 90.0f;
     }
     if (IsKeyDown(KEY_D)) {
         movement.x += 1.0f;
-        rotate += 90.0f;
+    }
+
+    if (movement.x != 0 || movement.y != 0) {
+        rotate = atan2(movement.x, movement.y) * RAD2DEG;
     }
 
     model.transform = MatrixRotateY(DEG2RAD * rotate);
