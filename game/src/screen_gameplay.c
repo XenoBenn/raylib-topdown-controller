@@ -52,13 +52,13 @@ float cameraYPosition;
 float const MAX_CAMERA_Y_POS = 35.0f;
 float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
-bool windowInventoryActive;
+// bool windowInventoryActive;
 bool windowInventroyToggle;
 bool isDragging = true;
 
 Vector2 mouseOffset = { 0, 0}; 
 Vector2 mousePos = { 0, 0}; 
-Rectangle windowInventoryPos = { 328, 152, 608, 424 };
+// Rectangle windowInventoryPos = { 328, 152, 608, 424 };
 
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
@@ -72,8 +72,9 @@ void InitGameplayScreen(void)
     framesCounter = 0;
     finishScreen = 0;
     model = LoadModel("resources/models/obj/player.obj");
-    windowInventoryActive = false;
+    // windowInventoryActive = false;
     windowInventroyToggle = false;
+    InitInventory();
 }
 
 // Gameplay Screen Update logic
@@ -88,7 +89,8 @@ void UpdateGameplayScreen(void)
     }
 
     if (IsKeyPressed(KEY_E)){
-        windowInventoryActive = !windowInventoryActive;
+        ToggleInventory();
+        // windowInventoryActive = !windowInventoryActive;
     }
 
     cameraYPosition = GetMouseWheelMove();
@@ -101,23 +103,6 @@ void UpdateGameplayScreen(void)
     } else if (camera.position.y >= MAX_CAMERA_Y_POS) {
         camera.position.y = MAX_CAMERA_Y_POS;
     } 
-
-
-    mousePos = GetMousePosition();
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        if (CheckCollisionPointRec(mousePos, windowInventoryPos)) {
-            isDragging = true;
-            mouseOffset.x = windowInventoryPos.x - mousePos.x;
-            mouseOffset.y = windowInventoryPos.y - mousePos.y;
-        }
-    }
-    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-        isDragging = false;
-    }
-    if (isDragging) {
-        windowInventoryPos.x = mousePos.x + mouseOffset.x;
-        windowInventoryPos.y = mousePos.y + mouseOffset.y;
-    }
 }
 
 // Gameplay Screen Draw logic
@@ -168,9 +153,7 @@ void DrawGameplayScreen(void)
     camera.position.z = modelStartPos.z + cameraOffset.z;
 
     // Raygui controls drawing
-    if (windowInventoryActive) {
-        windowInventoryActive = !GuiWindowBox((Rectangle)windowInventoryPos, "Inventory" );
-    }
+    // DrawInventory();
 }
 
 // Gameplay Screen Unload logic

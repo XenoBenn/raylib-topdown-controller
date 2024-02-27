@@ -32,3 +32,10 @@ void DrawInventory() {
         GuiPanel((Rectangle){ windowAnchor.x + 24, windowAnchor.y + 48, 48, 48 }, "NULL");
     }
 }
+
+void ToggleInventory() {
+    if (windowInventoryActive) {
+        windowInventoryActive = !windowInventoryActive;
+    }
+}
+
