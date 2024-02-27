@@ -1,0 +1,26 @@
+#ifndef INVENTORY_H
+#define INVENTORY_H
+
+#include "../../raylib-master/src/raylib.h"
+#include "../../raylib-master/src/raygui.h"
+#include "screens.h"
+
+
+//----------------------------------------------------------------------------------
+// Types and Structures Definition
+//----------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------
+// Global Variables Declaration (shared by several modules)
+//----------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------
+// Inventory Functions Declaration
+//----------------------------------------------------------------------------------
+
+void InitInventory(void);
+void DrawInventory(void);
+void UpdateInventory(void);
+
+#endif // End INVENTORY_H
