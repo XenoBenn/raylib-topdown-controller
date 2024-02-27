@@ -53,6 +53,11 @@ float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
 bool windowInventoryActive;
 bool windowInventroyToggle;
+bool isDragging = true;
+
+Vector2 mouseOffset = { 0, 0}; 
+Vector2 mousePos = { 0, 0}; 
+Rectangle windowInventoryPos = { 328, 152, 608, 424 };
 
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
@@ -65,7 +70,7 @@ void InitGameplayScreen(void)
     // TODO: Initialize GAMEPLAY screen variables here!
     framesCounter = 0;
     finishScreen = 0;
-    model = LoadModel("resources/models/obj/armor.obj");
+    model = LoadModel("resources/models/obj/player.obj");
     windowInventoryActive = false;
     windowInventroyToggle = false;
 }
@@ -88,6 +93,21 @@ void UpdateGameplayScreen(void)
     cameraYPosition = GetMouseWheelMove();
     if (camera.position.y > 15.0f && camera.position.y < 35.0f){
         camera.position.y -= cameraYPosition * 1.5f;
+    }
+    mousePos = GetMousePosition();
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(mousePos, windowInventoryPos)) {
+            isDragging = true;
+            mouseOffset.x = windowInventoryPos.x - mousePos.x;
+            mouseOffset.y = windowInventoryPos.y - mousePos.y;
+        }
+    }
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        isDragging = false;
+    }
+    if (isDragging) {
+        windowInventoryPos.x = mousePos.x + mouseOffset.x;
+        windowInventoryPos.y = mousePos.y + mouseOffset.y;
     }
 }
 
@@ -140,7 +160,7 @@ void DrawGameplayScreen(void)
 
     // Raygui controls drawing
     if (windowInventoryActive) {
-        windowInventoryActive = !GuiWindowBox((Rectangle) { 328, 152, 608, 424 }, "Inventory" );
+        windowInventoryActive = !GuiWindowBox((Rectangle)windowInventoryPos, "Inventory" );
     }
 }
 
