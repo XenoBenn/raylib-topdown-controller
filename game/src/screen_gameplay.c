@@ -26,6 +26,7 @@
 #include "../../raylib-master/src/raylib.h"
 #include "../../raylib-master/src/raymath.h"
 #include "screens.h"
+#include "inventory.h"
 
 #include "../../raylib-master/src/raygui.h"
 
