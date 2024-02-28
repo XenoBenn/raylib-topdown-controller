@@ -14,7 +14,9 @@
 //----------------------------------------------------------------------------------
 // Global Variables Declaration (shared by several modules)
 //----------------------------------------------------------------------------------
-
+extern Rectangle windowInventoryPos;
+extern bool windowInventoryActive;
+extern Vector2 windowAnchor;
 //----------------------------------------------------------------------------------
 // Inventory Functions Declaration
 //----------------------------------------------------------------------------------

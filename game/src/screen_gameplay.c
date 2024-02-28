@@ -25,12 +25,13 @@
 
 #include "../../raylib-master/src/raylib.h"
 #include "../../raylib-master/src/raymath.h"
-#include "screens.h"
 #include "inventory.h"
+#include "screens.h"
 
 #include "../../raylib-master/src/raygui.h"
 
 #include <math.h>
+#include <stdio.h>
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -52,18 +53,11 @@ float cameraYPosition;
 float const MAX_CAMERA_Y_POS = 35.0f;
 float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
-// bool windowInventoryActive;
-bool windowInventroyToggle;
-bool isDragging = true;
 
-Vector2 mouseOffset = { 0, 0}; 
-Vector2 mousePos = { 0, 0}; 
-// Rectangle windowInventoryPos = { 328, 152, 608, 424 };
-
+bool windowInventoryActive = false;
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
-
 
 // Gameplay Screen Initialization logic
 void InitGameplayScreen(void)
@@ -72,10 +66,9 @@ void InitGameplayScreen(void)
     framesCounter = 0;
     finishScreen = 0;
     model = LoadModel("resources/models/obj/player.obj");
-    // windowInventoryActive = false;
-    windowInventroyToggle = false;
     InitInventory();
 }
+
 
 // Gameplay Screen Update logic
 void UpdateGameplayScreen(void)
@@ -90,7 +83,6 @@ void UpdateGameplayScreen(void)
 
     if (IsKeyPressed(KEY_E)){
         ToggleInventory();
-        // windowInventoryActive = !windowInventoryActive;
     }
 
     cameraYPosition = GetMouseWheelMove();
@@ -153,7 +145,7 @@ void DrawGameplayScreen(void)
     camera.position.z = modelStartPos.z + cameraOffset.z;
 
     // Raygui controls drawing
-    // DrawInventory();
+    DrawInventory();
 }
 
 // Gameplay Screen Unload logic
