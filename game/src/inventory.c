@@ -21,8 +21,7 @@ Rectangle inventoryItemBrowser;
 Rectangle inventoryBrowserBar;
 Rectangle inventoryStash;
 float itemSlotOffset = 64; // The needed amount to shift the rectangles to be offsetted
-Rectangle itemSlotRow[MAX_STASH_COLS];
-Rectangle *itemSlot;
+Rectangle *itemSlot[MAX_STASH_COLS];
 //----------------------------------------------------------------------------------
 // Inventory Functions Definition
 //----------------------------------------------------------------------------------
@@ -37,7 +36,11 @@ void InitInventory() {
 }
 
 void DrawInventory() {
-    Rectangle *itemSlot = (Rectangle *)malloc(MAX_STASH_COLS * sizeof(Rectangle)); // Inventory slot array
+
+    // Allocating memory for each row
+    for (int i = 0; i < MAX_STASH_COLS; i++) {
+        itemSlot[i] = (Rectangle *)malloc(MAX_STASH_COLS * sizeof(Rectangle));
+    }
     if (windowInventoryActive) {
         windowInventoryActive = !GuiWindowBox((Rectangle)windowInventoryPos, "Inventory");
         GuiPanel((Rectangle)inventoryStashBar, NULL); // Stash bar
@@ -46,10 +49,16 @@ void DrawInventory() {
         GuiPanel((Rectangle)inventoryStash, NULL); // Stash space
         GuiPanel((Rectangle)inventoryItemSlot, NULL); // Item slot
         for (int i = 0; i < MAX_STASH_COLS; i++) {
-            itemSlot[i] = (Rectangle){ inventoryItemSlot.x + (itemSlotOffset * i), inventoryItemSlot.y, inventoryItemSlot.width, inventoryItemSlot.height };
             for (int j = 0; j < MAX_STASH_ROWS; j++) {
-                itemSlot[j] = (Rectangle) { inventoryItemSlot.x, inventoryItemSlot.y + (itemSlotOffset * i), inventoryItemSlot.width, inventoryItemSlot.height };
-                GuiPanel(itemSlot[i], NULL );
+                // itemSlot[i][j] = (Rectangle) { inventoryItemSlot.x + (itemSlotOffset * i), inventoryItemSlot.y, inventoryItemSlot.width, inventoryItemSlot.height };
+                // itemSlot[i][j] = (Rectangle) { inventoryItemSlot.x, inventoryItemSlot.y + (itemSlotOffset * i), inventoryItemSlot.width, inventoryItemSlot.height };
+                itemSlot[i][j] = (Rectangle) {
+                    inventoryItemSlot.x + (itemSlotOffset * i),
+                    inventoryItemSlot.y + (itemSlotOffset * j),
+                    inventoryItemSlot.width,
+                    inventoryItemSlot.height
+                };
+                GuiPanel(itemSlot[i][j], NULL );
             }
         }
     }
@@ -60,6 +69,8 @@ void ToggleInventory() {
 }
 
 void DeInitInventory() {
-    free(itemSlot);
+    for (int i = 0; i < MAX_STASH_COLS; i++) {
+        free(itemSlot[i]);
+    }
 }
 
