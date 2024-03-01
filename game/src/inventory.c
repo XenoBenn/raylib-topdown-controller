@@ -1,6 +1,7 @@
 #include "../../raylib-master/src/raylib.h"
 #include "../../raylib-master/src/raygui.h"
 #include "inventory.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 // Max rows and cols in the inventory stash that the player can have
@@ -19,9 +20,9 @@ Rectangle inventoryItemSlot;
 Rectangle inventoryItemBrowser;
 Rectangle inventoryBrowserBar;
 Rectangle inventoryStash;
-float itemSlotOffset = 8; // The needed amount to shift the rectangles to be offsetted
+float itemSlotOffset = 64; // The needed amount to shift the rectangles to be offsetted
 Rectangle itemSlotRow[MAX_STASH_COLS];
-
+Rectangle *itemSlot;
 //----------------------------------------------------------------------------------
 // Inventory Functions Definition
 //----------------------------------------------------------------------------------
@@ -29,18 +30,14 @@ void InitInventory() {
     Vector2 windowAnchor = { (float)screenWidth/2.0f - windowInventoryPos.width/2.0f, (float)screenHeight/2.0f - windowInventoryPos.height/2.0f };
     windowInventoryPos = (Rectangle){ windowAnchor.x, windowAnchor.y, 1016, 632 };
     inventoryStashBar = (Rectangle){ windowAnchor.x + 8, windowAnchor.y + 32, 656, 592 };
-    // Iterating through an array to fill up the inventory stash with rectangles
-    // for (int i = 0; i <= MAX_STASH_COLS; i++){
-    //     inventoryItemSlot = (Rectangle){ (windowAnchor.x + 24 + itemSlotOffset) * i, windowAnchor.y + 48, 48, 48 };
-    //     // itemSlotOffset[i] = &inventoryItemSlot;
-    //     printf("%d", i);
-    // }
     inventoryItemBrowser = (Rectangle){ windowAnchor.x + 672, windowAnchor.y + 32, 336, 592 };
     inventoryBrowserBar = (Rectangle){ windowAnchor.x + 680, windowAnchor.y + 40, 320, 384 };
     inventoryStash = (Rectangle){ windowAnchor.x + 16, windowAnchor.y + 40, 640, 384 };
+    inventoryItemSlot = (Rectangle) { windowAnchor.x + 24, windowAnchor.y +48, 48, 48 };
 }
 
 void DrawInventory() {
+    Rectangle *itemSlot = (Rectangle *)malloc(MAX_STASH_COLS * sizeof(Rectangle)); // Inventory slot array
     if (windowInventoryActive) {
         windowInventoryActive = !GuiWindowBox((Rectangle)windowInventoryPos, "Inventory");
         GuiPanel((Rectangle)inventoryStashBar, NULL); // Stash bar
@@ -48,14 +45,21 @@ void DrawInventory() {
         GuiPanel((Rectangle)inventoryBrowserBar, NULL); // Item bowser
         GuiPanel((Rectangle)inventoryStash, NULL); // Stash space
         GuiPanel((Rectangle)inventoryItemSlot, NULL); // Item slot
-        for (int i = 0; i <= MAX_STASH_COLS; i++){
-            inventoryItemSlot = (Rectangle){ (windowAnchor.x + 24 + itemSlotOffset) * i, windowAnchor.y + 48, 48, 48 };
-            // itemSlotOffset[i] = &inventoryItemSlot;
+        for (int i = 0; i < MAX_STASH_COLS; i++) {
+            itemSlot[i] = (Rectangle){ inventoryItemSlot.x + (itemSlotOffset * i), inventoryItemSlot.y, inventoryItemSlot.width, inventoryItemSlot.height };
+            for (int j = 0; j < MAX_STASH_ROWS; j++) {
+                itemSlot[j] = (Rectangle) { inventoryItemSlot.x, inventoryItemSlot.y + (itemSlotOffset * i), inventoryItemSlot.width, inventoryItemSlot.height };
+                GuiPanel(itemSlot[i], NULL );
+            }
         }
     }
 }
 
 void ToggleInventory() {
         windowInventoryActive = !windowInventoryActive;
+}
+
+void DeInitInventory() {
+    free(itemSlot);
 }
 

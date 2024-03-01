@@ -31,7 +31,7 @@
 #include "../../raylib-master/src/raygui.h"
 
 #include <math.h>
-#include <stdio.h>
+// include <stdio.h>
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -153,6 +153,7 @@ void UnloadGameplayScreen(void)
 {
     // TODO: Unload GAMEPLAY screen variables here!
     UnloadModel(model);
+    DeInitInventory();
 }
 
 // Gameplay Screen should finish?

@@ -25,5 +25,6 @@ void InitInventory(void);
 void DrawInventory(void);
 void ToggleInventory(void);
 void UpdateInventory(void);
+void DeInitInventory(void);
 
 #endif // End INVENTORY_H
