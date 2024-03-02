@@ -118,16 +118,31 @@ void DrawGameplayScreen(void)
     BeginMode3D(camera);
         DrawModel(model, modelStartPos, 1.0f, WHITE);
     
+        // Model drawing based on the toggle key of Q
         if (IsKeyPressed(KEY_Q)) {
             showCube = !showCube;
         }
         if (showCube){
+            // Get the mouse position for the ray
             Vector2 mousePos = GetMousePosition();
-            
-            workBenchPosition = (Vector3){ mousePos.x , 1.0f, mousePos.y };
-            printf("%fx, %fy, %fz\n", workBenchPosition.x , workBenchPosition.y, workBenchPosition.z);
-            printf("%f mousex, %f mousey\n", mousePos.x, mousePos.y );
-            DrawModel(mBox, workBenchPosition, 1.0f, BLACK);
+
+            // Get a ray from the mouse
+            Ray ray = GetMouseRay( mousePos, camera);
+            // Ray from mouse to intersection of the plane
+            RayCollision collision = GetRayCollisionQuad
+                (ray, 
+                (Vector3){-50.0, 0.0, -50.0}, 
+                (Vector3){-50.0, 0.0, 50.0}, 
+                (Vector3){50.0, 0.0, 50.0}, 
+                (Vector3){50.0, 0.0, -50.0});
+
+            // if the collision hits, than that is the point of the model
+            if (collision.hit) {
+            Vector3 intersectionPoint = collision.point;
+            workBenchPosition = collision.point;
+        }
+            // Draw the model on the mouse position
+            DrawModel(mBox, (Vector3){ workBenchPosition.x, workBenchPosition.y, workBenchPosition.z }, 1.0f, BLACK);
         }
 
         DrawGrid(100, 1.0f);
