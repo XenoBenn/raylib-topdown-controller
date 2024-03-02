@@ -57,9 +57,11 @@ float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
 Model mBox;
 Vector3 workBenchPosition;
+Vector3 latestWorldPosition;
 
 bool windowInventoryActive = false;
 bool showCube = false;
+bool isModelPlaced = false;
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -138,12 +140,21 @@ void DrawGameplayScreen(void)
 
             // if the collision hits, than that is the point of the model
             if (collision.hit) {
-            Vector3 intersectionPoint = collision.point;
-            workBenchPosition = collision.point;
+                Vector3 intersectionPoint = collision.point;
+                workBenchPosition = collision.point;
+                // Draw the model on the mouse position
+                DrawModelWires(mBox, workBenchPosition, 1.0f, LIGHTGRAY);
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    isModelPlaced = true;
+                    latestWorldPosition = workBenchPosition;
+                    printf("%f", workBenchPosition.x);
+                }
+            } 
         }
-            // Draw the model on the mouse position
-            DrawModel(mBox, (Vector3){ workBenchPosition.x, workBenchPosition.y, workBenchPosition.z }, 1.0f, BLACK);
+            if (isModelPlaced) {
+                DrawModel(mBox, latestWorldPosition, 1.0f, RED);
         }
+    
 
         DrawGrid(100, 1.0f);
     
@@ -196,6 +207,7 @@ void UnloadGameplayScreen(void)
 {
     // TODO: Unload GAMEPLAY screen variables here!
     UnloadModel(model);
+    UnloadModel(mBox);
     DeInitInventory();
 }
 
