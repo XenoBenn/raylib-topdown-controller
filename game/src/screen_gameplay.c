@@ -31,7 +31,7 @@
 #include "../../raylib-master/src/raygui.h"
 
 #include <math.h>
-// include <stdio.h>
+#include <stdio.h>
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -49,12 +49,17 @@ Camera3D camera = {
     .projection = CAMERA_PERSPECTIVE              // Camera mode type
 };
 
+float screenHeight;
+float screenWidth;
 float cameraYPosition;
 float const MAX_CAMERA_Y_POS = 35.0f;
 float const MIN_CAMERA_Y_POS = 15.0f;
 Model model;
+Model mBox;
+Vector3 workBenchPosition;
 
 bool windowInventoryActive = false;
+bool showCube = false;
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -65,8 +70,15 @@ void InitGameplayScreen(void)
     // TODO: Initialize GAMEPLAY screen variables here!
     framesCounter = 0;
     finishScreen = 0;
+
+    screenHeight = GetScreenHeight();
+    screenWidth = GetScreenWidth();
+
     model = LoadModel("resources/models/obj/player.obj");
+    mBox = LoadModel("resources/models/obj/box.obj");
     InitInventory();
+    workBenchPosition = (Vector3){ 0, 0, 0 };
+    
 }
 
 
@@ -84,6 +96,7 @@ void UpdateGameplayScreen(void)
     if (IsKeyPressed(KEY_E)){
         ToggleInventory();
     }
+
 
     cameraYPosition = GetMouseWheelMove();
     // Move the camera Y position
@@ -104,7 +117,22 @@ void DrawGameplayScreen(void)
 
     BeginMode3D(camera);
         DrawModel(model, modelStartPos, 1.0f, WHITE);
+    
+        if (IsKeyPressed(KEY_Q)) {
+            showCube = !showCube;
+        }
+        if (showCube){
+            Vector2 mousePos = GetMousePosition();
+            
+            workBenchPosition = (Vector3){ mousePos.x , 1.0f, mousePos.y };
+            printf("%fx, %fy, %fz\n", workBenchPosition.x , workBenchPosition.y, workBenchPosition.z);
+            printf("%f mousex, %f mousey\n", mousePos.x, mousePos.y );
+            DrawModel(mBox, workBenchPosition, 1.0f, BLACK);
+        }
+
         DrawGrid(100, 1.0f);
+    
+
     EndMode3D();
 
 
