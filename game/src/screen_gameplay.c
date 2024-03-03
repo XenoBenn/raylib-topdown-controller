@@ -143,7 +143,7 @@ void DrawGameplayScreen(void)
                 Vector3 intersectionPoint = collision.point;
                 workBenchPosition = collision.point;
                 // Draw the model on the mouse position
-                DrawModelWires(mBox, workBenchPosition, 1.0f, LIGHTGRAY);
+                DrawModelWires(mBox, (Vector3){(int)workBenchPosition.x, (int)workBenchPosition.y, (int)workBenchPosition.z}, 1.0f, LIGHTGRAY);
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     isModelPlaced = true;
                     latestWorldPosition = workBenchPosition;
@@ -152,7 +152,7 @@ void DrawGameplayScreen(void)
             } 
         }
             if (isModelPlaced) {
-                DrawModel(mBox, latestWorldPosition, 1.0f, RED);
+                DrawModel(mBox, (Vector3){(int)latestWorldPosition.x, (int)latestWorldPosition.y, (int)latestWorldPosition.z}, 1.0f, RED);
         }
     
 
