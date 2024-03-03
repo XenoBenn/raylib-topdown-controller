@@ -29,6 +29,8 @@
 #include "screens.h"
 
 #include "../../raylib-master/src/raygui.h"
+#define RLIGHTS_IMPLEMENTATION
+#include "../../raylib-master/src/rlgl.h"
 
 #include <math.h>
 #include <stdio.h>
