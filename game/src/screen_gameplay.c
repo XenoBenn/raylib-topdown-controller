@@ -56,6 +56,8 @@ float screenWidth;
 float cameraYPosition;
 float const MAX_CAMERA_Y_POS = 35.0f;
 float const MIN_CAMERA_Y_POS = 15.0f;
+float rotate = 0.0f;
+float lastRotate = 0.0f;
 Model model;
 Model mBox;
 Vector3 workBenchPosition;
@@ -168,7 +170,6 @@ void DrawGameplayScreen(void)
 
     // Normalize the movement vector
     Vector2 movement = { 0.0f, 0.0f };
-    float rotate = 0.0f;
 
     if (IsKeyDown(KEY_W)) {
         movement.y -= 1.0f;
@@ -185,8 +186,11 @@ void DrawGameplayScreen(void)
 
     if (movement.x != 0 || movement.y != 0) {
         rotate = atan2(movement.x, movement.y) * RAD2DEG;
+        lastRotate = rotate;
+        printf("lastRotate: %f\n", lastRotate);
     }
 
+    rotate = lastRotate;
     model.transform = MatrixRotateY(DEG2RAD * rotate);
 
     movement = Vector2Normalize(movement);
