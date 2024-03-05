@@ -151,7 +151,6 @@ void DrawGameplayScreen(void)
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     isModelPlaced = true;
                     latestWorldPosition = workBenchPosition;
-                    printf("%f", workBenchPosition.x);
                 }
             } 
         }
@@ -187,7 +186,6 @@ void DrawGameplayScreen(void)
     if (movement.x != 0 || movement.y != 0) {
         rotate = atan2(movement.x, movement.y) * RAD2DEG;
         lastRotate = rotate;
-        printf("lastRotate: %f\n", lastRotate);
     }
 
     rotate = lastRotate;
