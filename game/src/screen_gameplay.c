@@ -25,6 +25,7 @@
 
 #include "../../raylib-master/src/raylib.h"
 #include "../../raylib-master/src/raymath.h"
+#include "building.h"
 #include "inventory.h"
 #include "screens.h"
 
@@ -34,6 +35,7 @@
 
 #include <math.h>
 #include <stdio.h>
+
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -64,6 +66,7 @@ Vector3 workBenchPosition;
 Vector3 latestWorldPosition;
 
 bool windowInventoryActive = false;
+bool modelBoxShow = false;
 bool showCube = false;
 bool isModelPlaced = false;
 //----------------------------------------------------------------------------------
@@ -84,7 +87,7 @@ void InitGameplayScreen(void)
     mBox = LoadModel("resources/models/obj/box.obj");
     InitInventory();
     workBenchPosition = (Vector3){ 0, 0, 0 };
-    
+    InitBuilding();
 }
 
 
@@ -103,6 +106,11 @@ void UpdateGameplayScreen(void)
         ToggleInventory();
     }
 
+    if (IsKeyPressed(KEY_Q)) {
+        ToggleBuilding();
+    }
+
+    UpdateMousePos();
 
     cameraYPosition = GetMouseWheelMove();
     // Move the camera Y position
@@ -121,43 +129,14 @@ void DrawGameplayScreen(void)
 {
     // TODO: Draw GAMEPLAY screen here!
 
+
     BeginMode3D(camera);
-        DrawModel(model, modelStartPos, 1.0f, WHITE);
-    
-        // Model drawing based on the toggle key of Q
-        if (IsKeyPressed(KEY_Q)) {
-            showCube = !showCube;
-        }
-        if (showCube){
-            // Get the mouse position for the ray
-            Vector2 mousePos = GetMousePosition();
+        // Draw Player
+        DrawModel(model, modelStartPos, 1.0f, WHITE); 
 
-            // Get a ray from the mouse
-            Ray ray = GetMouseRay( mousePos, camera);
-            // Ray from mouse to intersection of the plane
-            RayCollision collision = GetRayCollisionQuad
-                (ray, 
-                (Vector3){-50.0, 0.0, -50.0}, 
-                (Vector3){-50.0, 0.0, 50.0}, 
-                (Vector3){50.0, 0.0, 50.0}, 
-                (Vector3){50.0, 0.0, -50.0});
-
-            // if the collision hits, than that is the point of the model
-            if (collision.hit) {
-                Vector3 intersectionPoint = collision.point;
-                workBenchPosition = collision.point;
-                // Draw the model on the mouse position
-                DrawModelWires(mBox, (Vector3){(int)workBenchPosition.x, (int)workBenchPosition.y, (int)workBenchPosition.z}, 1.0f, LIGHTGRAY);
-                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    isModelPlaced = true;
-                    latestWorldPosition = workBenchPosition;
-                }
-            } 
+        if (modelBoxShow) {
+            DrawBuilding();
         }
-            if (isModelPlaced) {
-                DrawModel(mBox, (Vector3){(int)latestWorldPosition.x, (int)latestWorldPosition.y, (int)latestWorldPosition.z}, 1.0f, RED);
-        }
-    
 
         DrawGrid(100, 1.0f);
     
@@ -211,8 +190,8 @@ void UnloadGameplayScreen(void)
 {
     // TODO: Unload GAMEPLAY screen variables here!
     UnloadModel(model);
-    UnloadModel(mBox);
     DeInitInventory();
+    DeInitBuilding();
 }
 
 // Gameplay Screen should finish?
