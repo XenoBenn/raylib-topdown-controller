@@ -9,6 +9,7 @@
 // Types and Structures Definition
 //----------------------------------------------------------------------------------
 extern Model player;
+extern Model character;
 extern Vector3 playerStartPosition;
 extern float playerRotate;
 extern float playerLastRotate;

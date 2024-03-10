@@ -12,17 +12,31 @@ float const MAX_CAMERA_HEIGHT = 35.0f;
 float const MIN_CAMERA_HEIGHT = 15.0f;
 float cameraHeight;
 Model player;
+Model character;
 Vector3 playerStartPosition = {0};
-    float playerRotate = 0.0f;
-    float playerLastRotate = 0.0f;
+Vector3 characterPosition = {0};
+float playerRotate = 0.0f;
+float playerLastRotate = 0.0f;
 
 
+    int animsCount = 0;
+    unsigned int animIndex = 0;
+    unsigned int animCurrentFrame = 0;
+    ModelAnimation *modelAnimations;
 //----------------------------------------------------------------------------------
 // Player Functions Definition
 //----------------------------------------------------------------------------------
 
 void InitPlayer() {
     player = LoadModel("resources/models/obj/player.obj");
+    character = LoadModel("resourves/models/glb/idle.glb");
+
+    int animsCount = 0;
+    unsigned int animIndex = 0;
+    unsigned int animCurrentFrame = 0;
+    ModelAnimation *modelAnimations = LoadModelAnimations("resources/models/glb/idle.glb", &animsCount);
+    Vector3 characterPosition = { 0.0f, 0.0f, 0.0f };
+
     playerStartPosition = (Vector3){ 0.0f, 0.0f, 0.0f };
     float playerRotate = 0.0f;
     float playerLastRotate = 0.0f;
@@ -31,9 +45,16 @@ void InitPlayer() {
 
 void DrawPlayer() {
     DrawModel(player, playerStartPosition, 1.0f, RED);
+    DrawModel(character, characterPosition, 1.0f, WHITE);
 }
 
 void UpdatePlayer() {
+
+    ModelAnimation anim = modelAnimations[animIndex];
+    animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
+    UpdateModelAnimation(character, anim, animCurrentFrame);
+
+
     Vector3 cameraOffset = { 0.0f, 25.0f, 3.0f };
 
     // Normalize the movement vector

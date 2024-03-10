@@ -24,7 +24,6 @@
 **********************************************************************************************/
 
 #include "../../raylib-master/src/raylib.h"
-#include "../../raylib-master/src/raymath.h"
 #include "building.h"
 #include "inventory.h"
 #include "player.h"
@@ -34,8 +33,6 @@
 #define RLIGHTS_IMPLEMENTATION
 #include "../../raylib-master/src/rlgl.h"
 
-#include <math.h>
-#include <stdio.h>
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
