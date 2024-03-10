@@ -27,6 +27,7 @@
 #include "../../raylib-master/src/raymath.h"
 #include "building.h"
 #include "inventory.h"
+#include "player.h"
 #include "screens.h"
 
 #include "../../raylib-master/src/raygui.h"
@@ -61,13 +62,9 @@ float const MIN_CAMERA_Y_POS = 15.0f;
 float rotate = 0.0f;
 float lastRotate = 0.0f;
 Model model;
-Model mBox;
-Vector3 workBenchPosition;
-Vector3 latestWorldPosition;
 
 bool windowInventoryActive = false;
 bool modelBoxShow = false;
-bool showCube = false;
 bool isModelPlaced = false;
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
@@ -84,9 +81,8 @@ void InitGameplayScreen(void)
     screenWidth = GetScreenWidth();
 
     model = LoadModel("resources/models/obj/player.obj");
-    mBox = LoadModel("resources/models/obj/box.obj");
+    InitPlayer();
     InitInventory();
-    workBenchPosition = (Vector3){ 0, 0, 0 };
     InitBuilding();
 }
 
@@ -110,8 +106,6 @@ void UpdateGameplayScreen(void)
         ToggleBuilding();
     }
 
-    UpdateMousePos();
-
     cameraYPosition = GetMouseWheelMove();
     // Move the camera Y position
     camera.position.y -= cameraYPosition * 2.0f;
@@ -132,6 +126,7 @@ void DrawGameplayScreen(void)
 
     BeginMode3D(camera);
         // Draw Player
+        DrawPlayer();
         DrawModel(model, modelStartPos, 1.0f, WHITE); 
 
         if (modelBoxShow) {
