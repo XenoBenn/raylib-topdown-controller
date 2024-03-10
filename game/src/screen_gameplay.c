@@ -56,16 +56,11 @@ Camera3D camera = {
 
 float screenHeight;
 float screenWidth;
-float cameraYPosition;
-float const MAX_CAMERA_Y_POS = 35.0f;
-float const MIN_CAMERA_Y_POS = 15.0f;
-float rotate = 0.0f;
-float lastRotate = 0.0f;
-Model model;
 
 bool windowInventoryActive = false;
 bool modelBoxShow = false;
 bool isModelPlaced = false;
+
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -80,7 +75,6 @@ void InitGameplayScreen(void)
     screenHeight = GetScreenHeight();
     screenWidth = GetScreenWidth();
 
-    model = LoadModel("resources/models/obj/player.obj");
     InitPlayer();
     InitInventory();
     InitBuilding();
@@ -106,16 +100,7 @@ void UpdateGameplayScreen(void)
         ToggleBuilding();
     }
 
-    cameraYPosition = GetMouseWheelMove();
-    // Move the camera Y position
-    camera.position.y -= cameraYPosition * 2.0f;
-
-    // Check if the camera position exceeds the limits and adjust if neccessary
-    if (camera.position.y <= MIN_CAMERA_Y_POS) {
-        camera.position.y = MIN_CAMERA_Y_POS;
-    } else if (camera.position.y >= MAX_CAMERA_Y_POS) {
-        camera.position.y = MAX_CAMERA_Y_POS;
-    } 
+    CameraDistance();
 }
 
 // Gameplay Screen Draw logic
@@ -127,7 +112,6 @@ void DrawGameplayScreen(void)
     BeginMode3D(camera);
         // Draw Player
         DrawPlayer();
-        DrawModel(model, modelStartPos, 1.0f, WHITE); 
 
         if (modelBoxShow) {
             DrawBuilding();
@@ -138,43 +122,7 @@ void DrawGameplayScreen(void)
 
     EndMode3D();
 
-
-    Vector3 cameraOffset = { 0.0f, 25.0f, 3.0f };
-
-    // Normalize the movement vector
-    Vector2 movement = { 0.0f, 0.0f };
-
-    if (IsKeyDown(KEY_W)) {
-        movement.y -= 1.0f;
-    }
-    if (IsKeyDown(KEY_S)) {
-        movement.y += 1.0f;
-    }
-    if (IsKeyDown(KEY_A)) {
-        movement.x -= 1.0f;
-    }
-    if (IsKeyDown(KEY_D)) {
-        movement.x += 1.0f;
-    }
-
-    if (movement.x != 0 || movement.y != 0) {
-        rotate = atan2(movement.x, movement.y) * RAD2DEG;
-        lastRotate = rotate;
-    }
-
-    rotate = lastRotate;
-    model.transform = MatrixRotateY(DEG2RAD * rotate);
-
-    movement = Vector2Normalize(movement);
-
-    // Update model movement based on input
-    modelStartPos.x += movement.x * 0.1f;
-    modelStartPos.z += movement.y * 0.1f;
-
-    // Update the camera to the model
-    camera.target = modelStartPos;
-    camera.position.x = modelStartPos.x + cameraOffset.x;
-    camera.position.z = modelStartPos.z + cameraOffset.z;
+    UpdatePlayer();
 
     // Raygui controls drawing
     DrawInventory();
@@ -184,9 +132,9 @@ void DrawGameplayScreen(void)
 void UnloadGameplayScreen(void)
 {
     // TODO: Unload GAMEPLAY screen variables here!
-    UnloadModel(model);
     DeInitInventory();
     DeInitBuilding();
+    DeInitPlayer();
 }
 
 // Gameplay Screen should finish?
