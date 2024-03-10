@@ -8,7 +8,10 @@
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
 //----------------------------------------------------------------------------------
-
+extern Model player;
+extern Vector3 playerStartPosition;
+extern float playerRotate;
+extern float playerLastRotate;
 
 //----------------------------------------------------------------------------------
 // Global Variables Declaration (shared by several modules)
@@ -20,6 +23,7 @@
 
 void InitPlayer(void);
 void DrawPlayer(void);
+void CameraDistance(void);
 void UpdatePlayer(void);
 void DeInitPlayer(void);
 
